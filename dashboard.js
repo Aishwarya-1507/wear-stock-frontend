@@ -1,4 +1,4 @@
-const apiUrl = "https://YOUR_BACKEND_URL"; // replace with your backend URL
+const apiUrl = "https://wear-stock-backend.onrender.com"; // replace with your backend URL
 const searchInput = document.querySelector(".search-box input");
 const tableBody = document.querySelector(".table-container tbody");
 const logoutBtn = document.querySelector("a[href='login.html']");
