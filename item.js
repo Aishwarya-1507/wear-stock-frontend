@@ -127,7 +127,7 @@ async function editItem(btn) {
     let row = btn.parentElement.parentElement;
     let id = row.dataset.id;
     let cells = row.getElementsByTagName("td");
-
+    let idValue = cells[0].innerText; // ID is not editable, but we need it for the prompt
     let name = prompt("Edit Name", cells[1].innerText);
     let category = prompt("Edit Category", cells[2].innerText);
     let size = prompt("Edit Size", cells[3].innerText);
