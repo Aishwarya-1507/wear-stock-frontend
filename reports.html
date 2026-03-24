@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Wear Stock</title>
+    <link rel="stylesheet" href="reports.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header class="navbar">
+    <div class="logo">
+        <span class="logo-wear">Wear</span>
+        <span class="logo-stock">Stock</span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="item.html">Items</a>
+        <a href="reports.html">Reports</a>
+        <a href="login.html">Logout</a>
+    </nav>
+</header>
+<h2 class="title">Reports & Analytics</h2>
+<div class="cards">
+    <div class="card">
+        <h3>Total Items</h3>
+        <p>120</p>
+    </div>
+    <div class="card">
+        <h3>Low Stock</h3>
+        <p>5</p>
+    </div>
+    <div class="card">
+        <h3>Categories</h3>
+        <p>8</p>
+    </div>
+</div>
+<div class="table-container">
+    <h3 class="table-title">Category Summary</h3>
+
+    <table class="report-table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total Items</th>
+            </tr>
+        </thead>
+
+        <tbody id="categoryTable">
+            <tr>
+                <td>Men</td>
+                <td>40</td>
+            </tr>
+            <tr>
+                <td>Women</td>
+                <td>50</td>
+            </tr>
+            <tr>
+                <td>Kids</td>
+                <td>30</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="charts-container">
+    <div class="chart-box">
+        <h3>Category Distribution</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+    <div class="chart-box">
+        <h3>Stock Status</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2026 Wear Stock</p>
+</footer>
+<script src="reports.js"></script>
+</body>
+</html>

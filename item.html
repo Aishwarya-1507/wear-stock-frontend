@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="item.css">
 </head>
 <body>
-    <script src="item.js"></script>
     <header class="navbar">
         <div class="logo">
     <span class="logo-wear">Wear</span>
@@ -26,10 +25,11 @@
         <input type="text" placeholder="Category">
         <input type="text" placeholder="Size">
         <input type="number" placeholder="Quantity">
-        <button>Add Item</button>
+        <button id="addBtn">Add Item</button>
     </div>
     <br><br>
     <table border="1" width="80%" align="center" cellpadding="10">
+    <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
@@ -39,6 +39,8 @@
             <th>Status</th>
             <th>Action</th>
         </tr>
+    </thead>
+    <tbody id="tableBody">
         <tr>
             <td>1</td>
             <td>T-Shirt</td>
@@ -47,8 +49,8 @@
             <td>25</td>
             <td class="in-stock">In Stock</td>
             <td>
-                <button>Edit</button>
-                <button>Delete</button>
+                <button onclick="editItem(this)">Edit</button>
+                <button onclick="deleteItem(this)">Delete</button>
             </td>
         </tr>
         <tr>
@@ -59,8 +61,8 @@
             <td>3</td>
             <td class="low-stock">Low Stock</td>
             <td>
-                <button>Edit</button>
-                <button>Delete</button>
+                <button onclick="editItem(this)">Edit</button>
+                <button onclick="deleteItem(this)">Delete</button>
             </td>
         </tr>
         <tr>
@@ -71,13 +73,16 @@
             <td>0</td>
             <td class="out-of-stock">Out of Stock</td>
             <td>
-                <button>Edit</button>
-                <button>Delete</button>
+                <button onclick="editItem(this)">Edit</button>
+                <button onclick="deleteItem(this)">Delete</button>
             </td>
         </tr>
-    </table>
-     <footer>
-       <aside>&copy; 2026 Wear Stock-Clothing Stock Management System</aside>
+
+    </tbody>
+</table>
+    <footer>
+<aside>&copy; 2026 Wear Stock-Clothing Stock Management System</aside>
     </footer>
+    <script src="item.js"></script>
 </body>
 </html>

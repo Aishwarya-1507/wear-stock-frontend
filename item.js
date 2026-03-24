@@ -1,8 +1,8 @@
-// Auto generate ID
 let idCounter = 4;
 
-// ➕ Add Item
-document.querySelector("button").addEventListener("click", function () {
+// ADD ITEM
+document.getElementById("addBtn").addEventListener("click", function () {
+
     let inputs = document.querySelectorAll("input");
 
     let name = inputs[0].value;
@@ -15,15 +15,16 @@ document.querySelector("button").addEventListener("click", function () {
         return;
     }
 
-    // Determine stock status
+    // Stock status
     let status = "";
     if (qty > 10) status = "In Stock";
     else if (qty > 0) status = "Low Stock";
     else status = "Out of Stock";
 
-    // Create row
-    let table = document.querySelector("table");
-    let row = table.insertRow(-1);
+    // Insert into tbody
+    let table = document.getElementById("tableBody");
+
+    let row = document.createElement("tr");
 
     row.innerHTML = `
         <td>${idCounter++}</td>
@@ -38,19 +39,20 @@ document.querySelector("button").addEventListener("click", function () {
         </td>
     `;
 
+    table.appendChild(row);
+
     // Clear inputs
     inputs.forEach(input => input.value = "");
 });
 
 
-// ❌ Delete Item
+// DELETE
 function deleteItem(btn) {
-    let row = btn.parentElement.parentElement;
-    row.remove();
+    btn.parentElement.parentElement.remove();
 }
 
 
-// ✏️ Edit Item
+// EDIT
 function editItem(btn) {
     let row = btn.parentElement.parentElement;
     let cells = row.getElementsByTagName("td");
@@ -74,8 +76,7 @@ function editItem(btn) {
 }
 
 
-// 🔐 Logout
+// LOGOUT
 function logout() {
-    alert("Logged out successfully!");
     window.location.href = "login.html";
 }
