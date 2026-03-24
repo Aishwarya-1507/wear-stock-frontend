@@ -13,7 +13,7 @@ async function login(event) {
     }
 
     try {
-        let res = await fetch("https://wear-stock-backend.onrender.com", {
+        let res = await fetch("https://wear-stock-backend.onrender.com/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

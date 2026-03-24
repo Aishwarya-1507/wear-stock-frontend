@@ -30,9 +30,8 @@ async function register(event) {
 
         // SUCCESS
         if (data.message) {
-            msg.style.color = "green";
+            msg.style.color = "dark green";
             msg.innerText = data.message;
-
             setTimeout(() => {
                 window.location.href = "login.html";
             }, 1200);
