@@ -1,7 +1,7 @@
 // ================= LOAD ITEMS =================
 async function loadItems() {
 
-    let res = await fetch("https://wear-stock-backend.onrender.com/item");
+    let res = await fetch("https://wear-stock-backend.onrender.com/items");
     let items = await res.json();
 
     let table = document.getElementById("tableBody");
@@ -49,7 +49,7 @@ document.getElementById("addBtn").addEventListener("click", async function () {
         return;
     }
 
-    await fetch("https://wear-stock-backend.onrender.com/item", {
+    await fetch("https://wear-stock-backend.onrender.com/items", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -68,7 +68,7 @@ document.getElementById("addBtn").addEventListener("click", async function () {
 // ================= DELETE =================
 async function deleteItem(id) {
 
-    await fetch(`https://wear-stock-backend.onrender.com/item${id}`, {
+    await fetch(`https://wear-stock-backend.onrender.com/items/${id}`, {
         method: "DELETE"
     });
 
@@ -89,7 +89,7 @@ async function editItem(id) {
         return;
     }
 
-    await fetch(`https://wear-stock-backend.onrender.com/item${id}`, {
+    await fetch(`https://wear-stock-backend.onrender.com/items/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

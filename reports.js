@@ -1,7 +1,7 @@
 async function loadReports() {
 
     // 🔗 Fetch data from backend
-    let res = await fetch("https://wear-stock-backend.onrender.com/item");
+    let res = await fetch("https://wear-stock-backend.onrender.com/items");
     let items = await res.json();
 
     // ---------------- CATEGORY COUNT ----------------
