@@ -1,96 +1,35 @@
-// BAR CHART (Category)
-const barCtx = document.getElementById('barChart');
+async function loadReports() {
+    let res = await fetch("http://localhost:5000/items");
+    let items = await res.json();
 
-new Chart(barCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Men', 'Women', 'Kids'],
-        datasets: [{
-            label: 'Total Items',
-            data: [40, 50, 30],
-            backgroundColor: [
-                '#4b6cb7',
-                '#6a11cb',
-                '#00c6ff'
-            ]
-        }]
-    },
-    options: {
-        plugins: {
-            legend: {
-                labels: {
-                    color: 'white'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: { color: 'white' }
-            },
-            y: {
-                ticks: { color: 'white' }
-            }
-        }
-    }
-});
+    let men=0, women=0, kids=0;
+    let inStock=0, low=0, out=0;
 
+    items.forEach(i => {
+        if(i.category==="Men") men++;
+        else if(i.category==="Women") women++;
+        else if(i.category==="Kids") kids++;
 
-// PIE CHART (Stock Status)
-const pieCtx = document.getElementById('pieChart');
-
-new Chart(pieCtx, {
-    type: 'pie',
-    data: {
-        labels: ['In Stock', 'Low Stock', 'Out of Stock'],
-        datasets: [{
-            data: [100, 15, 5],
-            backgroundColor: [
-                '#00ff99',
-                '#ffcc00',
-                '#ff4d4d'
-            ]
-        }]
-    },
-    options: {
-        plugins: {
-            legend: {
-                labels: {
-                    color: 'white'
-                }
-            }
-        }
-    }
-});
-// Example data (later replace with DB data)
-let items = [
-    { category: "Men" },
-    { category: "Men" },
-    { category: "Women" },
-    { category: "Women" },
-    { category: "Women" },
-    { category: "Kids" }
-];
-
-// Count categories
-function updateCategoryTable() {
-    let counts = {
-        Men: 0,
-        Women: 0,
-        Kids: 0
-    };
-
-    items.forEach(item => {
-        counts[item.category]++;
+        if(i.qty>10) inStock++;
+        else if(i.qty>0) low++;
+        else out++;
     });
 
-    let table = document.getElementById("categoryTable");
-
-    table.innerHTML = `
-        <tr><td>Men</td><td>${counts.Men}</td></tr>
-        <tr><td>Women</td><td>${counts.Women}</td></tr>
-        <tr><td>Kids</td><td>${counts.Kids}</td></tr>
+    document.getElementById("categoryTable").innerHTML = `
+    <tr><td>Men</td><td>${men}</td></tr>
+    <tr><td>Women</td><td>${women}</td></tr>
+    <tr><td>Kids</td><td>${kids}</td></tr>
     `;
+
+    new Chart(barChart, {
+        type:'bar',
+        data:{ labels:['Men','Women','Kids'], datasets:[{data:[men,women,kids]}]}
+    });
+
+    new Chart(pieChart, {
+        type:'pie',
+        data:{ labels:['In','Low','Out'], datasets:[{data:[inStock,low,out]}]}
+    });
 }
 
-// Run on load
-updateCategoryTable();
+loadReports();

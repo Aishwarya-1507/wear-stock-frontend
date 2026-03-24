@@ -1,82 +1,71 @@
-let idCounter = 4;
+async function loadItems() {
+    let res = await fetch("http://localhost:5000/items");
+    let items = await res.json();
 
-// ADD ITEM
-document.getElementById("addBtn").addEventListener("click", function () {
-
-    let inputs = document.querySelectorAll("input");
-
-    let name = inputs[0].value;
-    let category = inputs[1].value;
-    let size = inputs[2].value;
-    let qty = inputs[3].value;
-
-    if (!name || !category || !size || !qty) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    // Stock status
-    let status = "";
-    if (qty > 10) status = "In Stock";
-    else if (qty > 0) status = "Low Stock";
-    else status = "Out of Stock";
-
-    // Insert into tbody
     let table = document.getElementById("tableBody");
+    table.innerHTML = "";
 
-    let row = document.createElement("tr");
+    items.forEach(item => {
+        let status = item.qty > 10 ? "In Stock" :
+                     item.qty > 0 ? "Low Stock" : "Out";
 
-    row.innerHTML = `
-        <td>${idCounter++}</td>
-        <td>${name}</td>
-        <td>${category}</td>
-        <td>${size}</td>
-        <td>${qty}</td>
-        <td>${status}</td>
-        <td>
-            <button onclick="editItem(this)">Edit</button>
-            <button onclick="deleteItem(this)">Delete</button>
-        </td>
-    `;
-
-    table.appendChild(row);
-
-    // Clear inputs
-    inputs.forEach(input => input.value = "");
-});
-
-
-// DELETE
-function deleteItem(btn) {
-    btn.parentElement.parentElement.remove();
+        table.innerHTML += `
+        <tr>
+            <td>${item._id}</td>
+            <td>${item.name}</td>
+            <td>${item.category}</td>
+            <td>${item.size}</td>
+            <td>${item.qty}</td>
+            <td>${status}</td>
+            <td>
+                <button onclick="editItem('${item._id}')">Edit</button>
+                <button onclick="deleteItem('${item._id}')">Delete</button>
+            </td>
+        </tr>`;
+    });
 }
 
+// ADD
+document.getElementById("addBtn").onclick = async () => {
+    let i = document.querySelectorAll("input");
+
+    await fetch("http://localhost:5000/add-item", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            name: i[0].value,
+            category: i[1].value,
+            size: i[2].value,
+            qty: parseInt(i[3].value)
+        })
+    });
+
+    loadItems();
+};
 
 // EDIT
-function editItem(btn) {
-    let row = btn.parentElement.parentElement;
-    let cells = row.getElementsByTagName("td");
+async function editItem(id) {
+    let name = prompt("Name");
+    let category = prompt("Category");
+    let size = prompt("Size");
+    let qty = prompt("Qty");
 
-    let name = prompt("Edit Name", cells[1].innerText);
-    let category = prompt("Edit Category", cells[2].innerText);
-    let size = prompt("Edit Size", cells[3].innerText);
-    let qty = prompt("Edit Quantity", cells[4].innerText);
+    await fetch(`http://localhost:5000/update-item/${id}`, {
+        method: "PUT",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ name, category, size, qty: parseInt(qty) })
+    });
 
-    if (name && category && size && qty) {
-        cells[1].innerText = name;
-        cells[2].innerText = category;
-        cells[3].innerText = size;
-        cells[4].innerText = qty;
-
-        // Update status
-        if (qty > 10) cells[5].innerText = "In Stock";
-        else if (qty > 0) cells[5].innerText = "Low Stock";
-        else cells[5].innerText = "Out of Stock";
-    }
+    loadItems();
 }
 
+// DELETE
+async function deleteItem(id) {
+    await fetch(`http://localhost:5000/delete-item/${id}`, {
+        method: "DELETE"
+    });
 
-// LOGOUT
-function logout() {
-    window.location.href = "login.html";
+    loadItems();
 }
+
+loadItems();

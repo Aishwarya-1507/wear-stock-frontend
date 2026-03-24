@@ -1,24 +1,11 @@
-function logout() {
-    alert("Logged out successfully!");
-    window.location.href = "login.html";
-}
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.querySelector(".search-box input");
-    const tableRows = document.querySelectorAll("tbody tr");
+async function loadDashboard() {
+    let res = await fetch("http://localhost:5000/summary");
+    let data = await res.json();
 
-    searchInput.addEventListener("keyup", function () 
-    {
-        let filter = searchInput.value.toLowerCase();
-         tableRows.forEach(row => {
-            let text = row.innerText.toLowerCase();
-            if (text.includes(filter)) 
-                {
-                row.style.display = "";
-            } 
-            else
-                 {
-                row.style.display = "none";
-                 }
-        });
-    });
-});
+    document.getElementById("total").innerText = data.total;
+    document.getElementById("low").innerText = data.low;
+    document.getElementById("out").innerText = data.out;
+    document.getElementById("cat").innerText = data.categories;
+}
+
+loadDashboard();
