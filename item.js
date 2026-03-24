@@ -1,116 +1,119 @@
-// ================= LOAD ITEMS =================
-async function loadItems() {
+const apiUrl = "https://YOUR_BACKEND_URL"; // replace with your backend URL
 
-    let res = await fetch("https://wear-stock-backend.onrender.com/items");
+const tableBody = document.getElementById("tableBody");
+const addBtn = document.getElementById("addBtn");
+const inputs = document.querySelectorAll("input");
+
+// Load items from DB and display
+async function loadItems() {
+    let res = await fetch(`${apiUrl}/items`);
     let items = await res.json();
 
-    let table = document.getElementById("tableBody");
-    table.innerHTML = "";
+    tableBody.innerHTML = `
+        <tr>
+            <td>101</td>
+            <td>T-shirts</td>
+            <td>Men</td>
+            <td>M</td>
+            <td>30</td>
+            <td class="in-stock">In Stock</td>
+        </tr>
+        <tr>
+            <td>102</td>
+            <td>Jeans</td>
+            <td>Women</td>
+            <td>L</td> 
+            <td>15</td>
+            <td class="low-stock">Low Stock</td>
+        </tr>
+        <tr>
+            <td>103</td>
+            <td>Jackets</td>
+            <td>Kids</td>
+            <td>S</td> 
+            <td>0</td>
+            <td class="out-of-stock">Out of Stock</td>
+        </tr>
+    `;
 
-    items.forEach(item => {
-
-        let status = "";
-        if (item.qty > 10) status = "In Stock";
-        else if (item.qty > 0) status = "Low Stock";
-        else status = "Out of Stock";
+    // Append DB items
+    items.forEach((item, index) => {
+        const status =
+            item.qty > 10 ? "in-stock" :
+            item.qty > 0 ? "low-stock" :
+            "out-of-stock";
 
         let row = document.createElement("tr");
-
         row.innerHTML = `
-            <td>${item._id}</td>
+            <td>${index + 104}</td>
             <td>${item.name}</td>
             <td>${item.category}</td>
             <td>${item.size}</td>
             <td>${item.qty}</td>
-            <td>${status}</td>
+            <td class="${status}">${status.replace("-", " ")}</td>
             <td>
-                <button onclick="editItem('${item._id}')">Edit</button>
-                <button onclick="deleteItem('${item._id}')">Delete</button>
+                <button onclick="editItem('${item._id}', this)">Edit</button>
+                <button onclick="deleteItem('${item._id}', this)">Delete</button>
             </td>
         `;
-
-        table.appendChild(row);
+        tableBody.appendChild(row);
     });
 }
 
+loadItems();
 
-// ================= ADD ITEM =================
-document.getElementById("addBtn").addEventListener("click", async function () {
+// ADD ITEM
+addBtn.addEventListener("click", async () => {
+    const name = inputs[0].value;
+    const category = inputs[1].value;
+    const size = inputs[2].value;
+    const qty = inputs[3].value;
 
-    let inputs = document.querySelectorAll("input");
+    if (!name || !category || !size || !qty) return alert("Please fill all fields");
 
-    let name = inputs[0].value;
-    let category = inputs[1].value;
-    let size = inputs[2].value;
-    let qty = parseInt(inputs[3].value);
-
-    if (!name || !category || !size || !qty) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    await fetch("https://wear-stock-backend.onrender.com/items", {
+    let res = await fetch(`${apiUrl}/add-item`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, category, size, qty })
     });
+
+    let data = await res.json();
+    console.log(data);
 
     // Reload table
     loadItems();
 
-    // Clear inputs
-    inputs.forEach(input => input.value = "");
+    inputs.forEach(i => i.value = "");
 });
 
-
-// ================= DELETE =================
-async function deleteItem(id) {
-
-    await fetch(`https://wear-stock-backend.onrender.com/items/${id}`, {
-        method: "DELETE"
-    });
-
-    loadItems();
+// DELETE ITEM
+async function deleteItem(id, btn) {
+    await fetch(`${apiUrl}/delete-item/${id}`, { method: "DELETE" });
+    btn.parentElement.parentElement.remove();
 }
 
+// EDIT ITEM
+async function editItem(id, btn) {
+    const row = btn.parentElement.parentElement;
+    const cells = row.getElementsByTagName("td");
 
-// ================= EDIT =================
-async function editItem(id) {
+    const name = prompt("Edit Name", cells[1].innerText);
+    const category = prompt("Edit Category", cells[2].innerText);
+    const size = prompt("Edit Size", cells[3].innerText);
+    const qty = prompt("Edit Quantity", cells[4].innerText);
 
-    let name = prompt("Enter new name");
-    let category = prompt("Enter category");
-    let size = prompt("Enter size");
-    let qty = prompt("Enter quantity");
+    if (name && category && size && qty) {
+        await fetch(`${apiUrl}/update-item/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, category, size, qty })
+        });
 
-    if (!name || !category || !size || !qty) {
-        alert("All fields required");
-        return;
+        loadItems(); // reload after update
     }
-
-    await fetch(`https://wear-stock-backend.onrender.com/items/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name,
-            category,
-            size,
-            qty: parseInt(qty)
-        })
-    });
-
-    loadItems();
 }
 
-
-// ================= LOGOUT =================
+// LOGOUT
 function logout() {
     window.location.href = "login.html";
 }
-
-
-// ================= LOAD ON START =================
-loadItems();
