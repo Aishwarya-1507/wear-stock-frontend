@@ -1,16 +1,22 @@
+// ================= LOAD ITEMS =================
 async function loadItems() {
-    let res = await fetch("http://localhost:5000/items");
+
+    let res = await fetch("https://wear-stock-backend.onrender.com/");
     let items = await res.json();
 
     let table = document.getElementById("tableBody");
     table.innerHTML = "";
 
     items.forEach(item => {
-        let status = item.qty > 10 ? "In Stock" :
-                     item.qty > 0 ? "Low Stock" : "Out";
 
-        table.innerHTML += `
-        <tr>
+        let status = "";
+        if (item.qty > 10) status = "In Stock";
+        else if (item.qty > 0) status = "Low Stock";
+        else status = "Out of Stock";
+
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
             <td>${item._id}</td>
             <td>${item.name}</td>
             <td>${item.category}</td>
@@ -21,51 +27,90 @@ async function loadItems() {
                 <button onclick="editItem('${item._id}')">Edit</button>
                 <button onclick="deleteItem('${item._id}')">Delete</button>
             </td>
-        </tr>`;
+        `;
+
+        table.appendChild(row);
     });
 }
 
-// ADD
-document.getElementById("addBtn").onclick = async () => {
-    let i = document.querySelectorAll("input");
 
-    await fetch("http://localhost:5000/add-item", {
+// ================= ADD ITEM =================
+document.getElementById("addBtn").addEventListener("click", async function () {
+
+    let inputs = document.querySelectorAll("input");
+
+    let name = inputs[0].value;
+    let category = inputs[1].value;
+    let size = inputs[2].value;
+    let qty = parseInt(inputs[3].value);
+
+    if (!name || !category || !size || !qty) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    await fetch("https://wear-stock-backend.onrender.com/", {
         method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({
-            name: i[0].value,
-            category: i[1].value,
-            size: i[2].value,
-            qty: parseInt(i[3].value)
-        })
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, category, size, qty })
     });
 
+    // Reload table
     loadItems();
-};
 
-// EDIT
-async function editItem(id) {
-    let name = prompt("Name");
-    let category = prompt("Category");
-    let size = prompt("Size");
-    let qty = prompt("Qty");
+    // Clear inputs
+    inputs.forEach(input => input.value = "");
+});
 
-    await fetch(`http://localhost:5000/update-item/${id}`, {
-        method: "PUT",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ name, category, size, qty: parseInt(qty) })
-    });
 
-    loadItems();
-}
-
-// DELETE
+// ================= DELETE =================
 async function deleteItem(id) {
-    await fetch(`http://localhost:5000/delete-item/${id}`, {
+
+    await fetch(`https://wear-stock-backend.onrender.com/item/${id}`, {
         method: "DELETE"
     });
 
     loadItems();
 }
 
+
+// ================= EDIT =================
+async function editItem(id) {
+
+    let name = prompt("Enter new name");
+    let category = prompt("Enter category");
+    let size = prompt("Enter size");
+    let qty = prompt("Enter quantity");
+
+    if (!name || !category || !size || !qty) {
+        alert("All fields required");
+        return;
+    }
+
+    await fetch(`https://wear-stock-backend.onrender.com/item/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name,
+            category,
+            size,
+            qty: parseInt(qty)
+        })
+    });
+
+    loadItems();
+}
+
+
+// ================= LOGOUT =================
+function logout() {
+    window.location.href = "login.html";
+}
+
+
+// ================= LOAD ON START =================
 loadItems();
