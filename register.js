@@ -14,7 +14,7 @@ async function register(event) {
     }
 
     try {
-        let res = await fetch("https://wear-stock-backend.onrender.com", {
+        let res = await fetch("https://wear-stock-backend.onrender.com/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -1,7 +1,7 @@
 // ================= LOAD ITEMS =================
 async function loadItems() {
 
-    let res = await fetch("https://wear-stock-backend.onrender.com/");
+    let res = await fetch("https://wear-stock-backend.onrender.com");
     let items = await res.json();
 
     let table = document.getElementById("tableBody");
