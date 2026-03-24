@@ -1,0 +1,155 @@
+/* Body */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364, #4b6cb7, #6a11cb);
+    color: white;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+/* Logo */
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo-wear {
+    color: #ffffff;
+}
+
+.logo-stock {
+    color: #6a11cb;
+}
+
+/* Nav links */
+.nav-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #ddd;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+/* Heading */
+h2 {
+    margin-top: 20px;
+}
+
+/* Form Section */
+div[align="center"] {
+    margin-top: 20px;
+}
+
+/* Inputs */
+input {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+/* Input focus */
+input:focus {
+    border: 1px solid #6a11cb;
+    background: rgba(255,255,255,0.2);
+}
+
+/* Button */
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(to right, #4b6cb7, #6a11cb);
+    color: white;
+    transition: 0.3s;
+}
+
+/* Button hover */
+button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #6a11cb, #4b6cb7);
+}
+
+/* Table container */
+table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Table header */
+th {
+    background: rgba(0,0,0,0.5);
+    padding: 12px;
+}
+
+/* Table data */
+td {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Row hover */
+tr:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Stock status colors */
+td:nth-child(6) {
+    font-weight: bold;
+}
+
+tr td:contains("In Stock") {
+    color: lightgreen;
+}
+
+tr td:contains("Low Stock") {
+    color: orange;
+}
+
+tr td:contains("Out of Stock") {
+    color: red;
+}
+.in-stock {
+    color: rgb(7, 183, 7);
+    font-weight: bold;
+}
+
+.low-stock {
+    color: orange;
+    font-weight: bold;
+}
+
+.out-of-stock {
+    color: red;
+    font-weight: bold;
+}
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 15px;
+    background: rgba(0,0,0,0.4);
+}

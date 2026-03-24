@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage items-Stock Wear</title>
+    <link rel="stylesheet" href="item.css">
+</head>
+<body>
+    <script src="item.js"></script>
+    <header class="navbar">
+        <div class="logo">
+    <span class="logo-wear">Wear</span>
+    <span class="logo-stock">Stock</span>
+       </div>
+        <nav class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="item.html">Items</a>
+            <a href="reports.html">Reports</a>
+            <a href="login.html" onclick="logout()">Logout</a>
+        </nav>
+    </header>
+     <h2 align="center">Manage Items</h2>
+    <div align="center">
+        <input type="text" placeholder="Item Name">
+        <input type="text" placeholder="Category">
+        <input type="text" placeholder="Size">
+        <input type="number" placeholder="Quantity">
+        <button>Add Item</button>
+    </div>
+    <br><br>
+    <table border="1" width="80%" align="center" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Size</th>
+            <th>Qty</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>T-Shirt</td>
+            <td>Men</td>
+            <td>M</td>
+            <td>25</td>
+            <td class="in-stock">In Stock</td>
+            <td>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Jeans</td>
+            <td>Women</td>
+            <td>L</td>
+            <td>3</td>
+            <td class="low-stock">Low Stock</td>
+            <td>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Hoodie</td>
+            <td>Kids</td>
+            <td>S</td>
+            <td>0</td>
+            <td class="out-of-stock">Out of Stock</td>
+            <td>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        </tr>
+    </table>
+     <footer>
+       <aside>&copy; 2026 Wear Stock-Clothing Stock Management System</aside>
+    </footer>
+</body>
+</html>

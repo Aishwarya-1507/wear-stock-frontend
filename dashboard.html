@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A clothing stock management system">
+    <title>Wear Stock-Clothing stock management system </title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <script src="dashboard.js"></script>
+    <header class="navbar">
+        <div class="logo">
+    <span class="logo-wear">Wear</span>
+    <span class="logo-stock">Stock</span>
+       </div>
+        <nav class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="item.html">Items</a>
+            <a href="reports.html">Reports</a>
+            <a href="login.html" onclick="logout()">Logout</a>
+        </nav>
+    </header>
+    <div class="search-box">
+        <input type="text" placeholder="Search by name or category or size...">
+    </div>
+    <div class="cards">
+        <div class="card">
+            <h3>Total Items</h3>
+            <p>150</p>
+        </div>
+        <div class="card">
+                <h3>Low Stock Items</h3>
+                <p>20</p>
+            </div>
+            <div class="card">
+                <h3>Out of Stock Items</h3>
+                <p>5</p>
+            </div>
+            <div class="card">
+                <h3>Categories</h3>
+                <p>8</p>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Stock Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>101</td>
+                        <td>T-shirts</td>
+                        <td>Men</td>
+                        <td>M</td>
+                        <td>30</td>
+                        <td class="in-stock">In Stock</td>
+                    </tr>
+                    <tr>
+                        <td>102</td>
+                        <td>Jeans</td>
+                        <td>Women</td>
+                        <td>L</td> 
+                        <td>15</td>
+                        <td class="low-stock">Low Stock</td>
+                    </tr>
+                    <tr>
+                        <td>103</td>
+                        <td>Jackets</td>
+                        <td>Kids</td>
+                        <td>S</td> 
+                        <td>0</td>
+                        <td class="out-of-stock">Out of Stock</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer>
+       <aside>&copy; 2026 Wear Stock-Clothing Stock Management System</aside>
+    </footer>
+</body>
+</html>
