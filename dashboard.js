@@ -23,10 +23,10 @@ async function loadDashboard() {
 
         // Update cards
         const cards = document.querySelectorAll(".cards .card p");
-        cards[0].innerText = totalItems; // Total Items
-        cards[1].innerText = lowStock;   // Low Stock
-        cards[2].innerText = outStock;   // Out of Stock
-        cards[3].innerText = categories; // Categories
+        cards[0].innerText = 120; // Total Items
+        cards[1].innerText = 5;   // Low Stock
+        cards[2].innerText = 2;   // Out of Stock
+        cards[3].innerText = 8; // Categories
 
         // ---------------- TABLE ----------------
         tableBody.innerHTML = `

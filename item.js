@@ -84,12 +84,13 @@ async function loadItems() {
 // ==================== ADD ITEM ====================
 document.getElementById("addBtn").addEventListener("click", async () => {
     let inputs = document.querySelectorAll("input");
-    let name = inputs[0].value;
-    let category = inputs[1].value;
-    let size = inputs[2].value;
-    let qty = inputs[3].value;
+    let id = inputs[0].value;
+    let name = inputs[1].value;
+    let category = inputs[2].value;
+    let size = inputs[3].value;
+    let qty = inputs[4].value;
 
-    if (!name || !category || !size || !qty) {
+    if (!id || !name || !category || !size || !qty) {
         alert("Please fill all fields");
         return;
     }
@@ -98,7 +99,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
         await fetch(`${backendURL}/add-item`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, category, size, qty: Number(qty) })
+            body: JSON.stringify({ id, name, category, size, qty: Number(qty) })
         });
 
         inputs.forEach(input => input.value = "");
