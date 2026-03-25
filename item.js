@@ -12,8 +12,15 @@ async function loadItems() {
         items.forEach(item => {
 
             let status = "In Stock";
-            if (item.qty === 0) status = "Out of Stock";
-            else if (item.qty <= 5) status = "Low Stock";
+            let statusClass = "in-stock";
+
+            if (item.qty === 0) {
+                status = "Out of Stock";
+                statusClass = "out-of-stock";
+            } else if (item.qty <= 5) {
+                status = "Low Stock";
+                statusClass = "low-stock";
+            }
 
             const row = `
                 <tr>
@@ -22,7 +29,7 @@ async function loadItems() {
                     <td>${item.category}</td>
                     <td>${item.size}</td>
                     <td>${item.qty}</td>
-                    <td>${status}</td>
+                    <td class="${statusClass}">${status}</td>
                     <td>
                         <button onclick="editItem(${item.id})">Edit</button>
                         <button onclick="deleteItem(${item.id})">Delete</button>
@@ -51,7 +58,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
     }
 
     try {
-        await fetch(`${backendURL}/add-items`, {
+        await fetch(`${backendURL}/add-item`, {   // ✅ FIXED HERE
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -64,7 +71,14 @@ document.getElementById("addBtn").addEventListener("click", async () => {
             })
         });
 
+        // clear inputs
+        document.getElementById("name").value = "";
+        document.getElementById("category").value = "";
+        document.getElementById("size").value = "";
+        document.getElementById("qty").value = "";
+
         loadItems();
+
     } catch (error) {
         console.log("Add error:", error);
     }
@@ -117,5 +131,5 @@ function logout() {
     window.location.href = "login.html";
 }
 
-// Load items when page opens
+// Load items
 loadItems();
