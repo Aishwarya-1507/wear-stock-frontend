@@ -67,7 +67,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
                 name,
                 category,
                 size,
-                qty
+                qty: Number(qty)
             })
         });
         let data = await res.json();
