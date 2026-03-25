@@ -1,81 +1,58 @@
 const backendURL = "https://wear-stock-backend.onrender.com";
 
-// LOAD DASHBOARD
-async function loadDashboard() {
+async function initDashboard() {
     try {
-        // 1️⃣ Fetch all items
-        const res = await fetch(`${backendURL}/items`);
-        const items = await res.json();
+        // Get Summary Data for Cards
+        const sumRes = await fetch(`${backendURL}/summary`);
+        const summary = await sumRes.json();
+        
+        document.getElementById("totalItems").innerText = summary.total;
+        document.getElementById("lowStock").innerText = summary.low;
+        document.getElementById("outStock").innerText = summary.out;
+        document.getElementById("categories").innerText = summary.categories;
 
-        console.log("Dashboard Items:", items);
+        // Get All Items for Table
+        const itemRes = await fetch(`${backendURL}/items`);
+        const items = await itemRes.json();
+        renderTable(items);
 
-        // 2️⃣ Calculate values
-        let total = items.length;
-        let low = 0;
-        let out = 0;
-        let categoriesSet = new Set();
-
-        items.forEach(item => {
-            categoriesSet.add(item.category);
-
-            if (item.qty === 0) out++;
-            else if (item.qty <= 5) low++;
+        // Search Logic
+        document.getElementById("searchInput").addEventListener("input", (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = items.filter(i => 
+                i.name.toLowerCase().includes(term) || 
+                i.category.toLowerCase().includes(term) ||
+                i.size.toLowerCase().includes(term)
+            );
+            renderTable(filtered);
         });
 
-        // 3️⃣ Update cards
-        document.getElementById("totalItems").innerText = total;
-        document.getElementById("lowStock").innerText = low;
-        document.getElementById("outStock").innerText = out;
-        document.getElementById("categories").innerText = categoriesSet.size;
-
-        // 4️⃣ Update table
-        const table = document.getElementById("dashboardTable");
-        table.innerHTML = "";
-
-        items.forEach(item => {
-            let status = "In Stock";
-            let statusclass = "in-stock";
-            if (item.qty === 0){ status = "Out of Stock";
-            statusclass = "out-of-stock";
-            }
-            else if (item.qty <= 5) {status = "Low Stock";
-            statusclass = "low-stock";
-            }
-
-
-            table.innerHTML += `
-                <tr>
-                    <td>${item.id}</td>
-                    <td>${item.name}</td>
-                    <td>${item.category}</td>
-                    <td>${item.size}</td>
-                    <td>${item.qty}</td>
-                    <td class="${statusclass}">${status}</td>
-                </tr>
-            `;
-        });
-
-    } catch (err) {
-        console.error("Dashboard error:", err);
-        alert("Failed to load dashboard ❌");
+    } catch (error) {
+        console.error("Dashboard error:", error);
     }
 }
 
-// SEARCH FUNCTION
-document.getElementById("searchInput").addEventListener("keyup", function () {
-    let filter = this.value.toLowerCase();
-    let rows = document.querySelectorAll("#dashboardTable tr");
+function renderTable(data) {
+    const table = document.getElementById("dashboardTable");
+    table.innerHTML = "";
+    data.forEach(item => {
+        let status = "In Stock";
+        let color = "green";
+        if (item.qty === 0) { status = "Out of Stock"; color = "red"; }
+        else if (item.qty <= 5) { status = "Low Stock"; color = "orange"; }
 
-    rows.forEach(row => {
-        let text = row.innerText.toLowerCase();
-        row.style.display = text.includes(filter) ? "" : "none";
+        table.innerHTML += `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td>${item.category}</td>
+                <td>${item.size}</td>
+                <td>${item.qty}</td>
+                <td style="color:${color}; font-weight:bold;">${status}</td>
+            </tr>
+        `;
     });
-});
-
-// LOGOUT
-function logout() {
-    window.location.href = "login.html";
 }
 
-// LOAD DATA
-window.onload = loadDashboard;
+function logout() { window.location.href = "login.html"; }
+initDashboard();
