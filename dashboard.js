@@ -50,7 +50,7 @@ async function loadDashboard() {
                     <td>${item.category}</td>
                     <td>${item.size}</td>
                     <td>${item.qty}</td>
-                    <td>${status}</td>
+                    <td class="${statusclass}">${status}</td>
                 </tr>
             `;
         });

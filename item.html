@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="item.css">
 </head>
 <body>
+
 <header class="navbar">
     <div class="logo">
         <span class="logo-wear">Wear</span>
@@ -16,12 +17,13 @@
         <a href="dashboard.html">Dashboard</a>
         <a href="item.html">Items</a>
         <a href="reports.html">Reports</a>
-        <a href="login.html" onclick="logout()">Logout</a>
+        <a href="#" onclick="logout()">Logout</a>
     </nav>
 </header>
 
 <h2 align="center">Manage Items</h2>
 
+<!-- ✅ INPUT FIELDS -->
 <div align="center">
     <input type="text" id="name" placeholder="Item Name">
     <input type="text" id="category" placeholder="Category">
@@ -32,6 +34,7 @@
 
 <br><br>
 
+<!-- ✅ TABLE -->
 <table border="1" width="80%" align="center" cellpadding="10">
     <thead>
         <tr>
@@ -45,12 +48,12 @@
         </tr>
     </thead>
     <tbody id="tableBody">
-        <!-- Items will load here from backend -->
+        <!-- Data will come from backend -->
     </tbody>
 </table>
 
 <footer>
-    <aside>&copy; 2026 Wear Stock - Clothing Stock Management System</aside>
+    <aside>&copy; 2026 Wear Stock</aside>
 </footer>
 
 <script src="item.js"></script>

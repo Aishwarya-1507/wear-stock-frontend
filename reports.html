@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Wear Stock</title>
     <link rel="stylesheet" href="reports.css">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
 <header class="navbar">
     <div class="logo">
         <span class="logo-wear">Wear</span>
@@ -21,21 +24,33 @@
         <a href="login.html">Logout</a>
     </nav>
 </header>
+
 <h2 class="title">Reports & Analytics</h2>
+
+<!-- ✅ CARDS (UPDATED WITH IDs) -->
 <div class="cards">
     <div class="card">
         <h3>Total Items</h3>
-        <p>120</p>
+        <p id="totalItems">0</p>
     </div>
+
     <div class="card">
         <h3>Low Stock</h3>
-        <p>5</p>
+        <p id="lowStock">0</p>
     </div>
+
+    <div class="card">
+        <h3>Out of Stock</h3>
+        <p id="outStock">0</p>
+    </div>
+
     <div class="card">
         <h3>Categories</h3>
-        <p>8</p>
+        <p id="categories">0</p>
     </div>
 </div>
+
+<!-- CATEGORY TABLE -->
 <div class="table-container">
     <h3 class="table-title">Category Summary</h3>
 
@@ -47,35 +62,29 @@
             </tr>
         </thead>
 
-        <tbody id="categoryTable">
-            <tr>
-                <td>Men</td>
-                <td>40</td>
-            </tr>
-            <tr>
-                <td>Women</td>
-                <td>50</td>
-            </tr>
-            <tr>
-                <td>Kids</td>
-                <td>30</td>
-            </tr>
-        </tbody>
+        <!-- ✅ THIS WILL BE FILLED BY JS -->
+        <tbody id="categoryTable"></tbody>
     </table>
 </div>
+
+<!-- CHARTS -->
 <div class="charts-container">
     <div class="chart-box">
         <h3>Category Distribution</h3>
         <canvas id="barChart"></canvas>
     </div>
+
     <div class="chart-box">
         <h3>Stock Status</h3>
         <canvas id="pieChart"></canvas>
     </div>
 </div>
+
 <footer>
     <p>&copy; 2026 Wear Stock</p>
 </footer>
+
 <script src="reports.js"></script>
+
 </body>
 </html>

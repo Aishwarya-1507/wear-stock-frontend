@@ -5,13 +5,13 @@ let pieChartInstance;
 
 async function loadReports() {
     try {
-        // 1️⃣ FETCH DATA FROM BACKEND
+        // 🔗 FETCH DATA
         const res = await fetch(`${backendURL}/items`);
         const items = await res.json();
 
-        console.log("Items from DB:", items); // debug
+        console.log("Items:", items);
 
-        // 2️⃣ CALCULATE VALUES
+        // 📊 CALCULATIONS
         let counts = { Men: 0, Women: 0, Kids: 0 };
 
         let inStock = 0;
@@ -31,18 +31,26 @@ async function loadReports() {
             else inStock++;
         });
 
-        // 3️⃣ UPDATE CATEGORY TABLE
+        // ✅ UPDATE CARDS
+        document.getElementById("totalItems").innerText = items.length;
+        document.getElementById("lowStock").innerText = lowStock;
+        document.getElementById("outStock").innerText = outStock;
+
+        const categoriesCount = Object.values(counts).filter(v => v > 0).length;
+        document.getElementById("categories").innerText = categoriesCount;
+
+        // ✅ UPDATE TABLE
         document.getElementById("categoryTable").innerHTML = `
             <tr><td>Men</td><td>${counts.Men}</td></tr>
             <tr><td>Women</td><td>${counts.Women}</td></tr>
             <tr><td>Kids</td><td>${counts.Kids}</td></tr>
         `;
 
-        // 4️⃣ DESTROY OLD CHARTS (IMPORTANT FIX)
+        // ❗ DESTROY OLD CHARTS (IMPORTANT)
         if (barChartInstance) barChartInstance.destroy();
         if (pieChartInstance) pieChartInstance.destroy();
 
-        // 5️⃣ BAR CHART
+        // 📊 BAR CHART
         const barCtx = document.getElementById("barChart").getContext("2d");
 
         barChartInstance = new Chart(barCtx, {
@@ -69,7 +77,7 @@ async function loadReports() {
             }
         });
 
-        // 6️⃣ PIE CHART
+        // 🥧 PIE CHART
         const pieCtx = document.getElementById("pieChart").getContext("2d");
 
         pieChartInstance = new Chart(pieCtx, {
@@ -92,10 +100,10 @@ async function loadReports() {
         });
 
     } catch (error) {
-        console.error("Report Error:", error);
+        console.error("Reports Error:", error);
         alert("Failed to load reports ❌");
     }
 }
 
-// LOAD ON PAGE OPEN
+// 🚀 LOAD ON PAGE OPEN
 window.onload = loadReports;
