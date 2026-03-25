@@ -1,34 +1,40 @@
-const backendURL = "https://wear-stock-backend.onrender.com"; 
+const backendURL = "https://wear-stock-backend.onrender.com";
 
-// LOAD items from backend
+// LOAD ITEMS
 async function loadItems() {
     try {
-        let res = await fetch(`${backendURL}/items`);
-        let data = await res.json();
+        const res = await fetch(`${backendURL}/items`);
+        const items = await res.json();
 
-        const tbody = document.getElementById("tableBody");
-        tbody.innerHTML = "";
+        const tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
 
-        data.forEach((item, index) => {
-            let status = item.qty > 10 ? "In Stock" : (item.qty > 0 ? "Low Stock" : "Out of Stock");
+        items.forEach(item => {
 
-            let row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${item.name}</td>
-                <td>${item.category}</td>
-                <td>${item.size}</td>
-                <td>${item.qty}</td>
-                <td class="${status.toLowerCase().replace(" ", "-")}">${status}</td>
-                <td>
-                    <button onclick="editItem('${item._id}')">Edit</button>
-                    <button onclick="deleteItem('${item._id}')">Delete</button>
-                </td>
+            let status = "In Stock";
+            if (item.qty === 0) status = "Out of Stock";
+            else if (item.qty <= 5) status = "Low Stock";
+
+            const row = `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>${item.category}</td>
+                    <td>${item.size}</td>
+                    <td>${item.qty}</td>
+                    <td>${status}</td>
+                    <td>
+                        <button onclick="editItem(${item.id})">Edit</button>
+                        <button onclick="deleteItem(${item.id})">Delete</button>
+                    </td>
+                </tr>
             `;
-            tbody.appendChild(row);
+
+            tableBody.innerHTML += row;
         });
-    } catch (err) {
-        console.error(err);
+
+    } catch (error) {
+        console.log("Error loading items:", error);
     }
 }
 
@@ -47,57 +53,69 @@ document.getElementById("addBtn").addEventListener("click", async () => {
     try {
         await fetch(`${backendURL}/add-item`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, category, size, qty: Number(qty) })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                category,
+                size,
+                qty
+            })
         });
-        // Clear fields
-        document.getElementById("name").value = "";
-        document.getElementById("category").value = "";
-        document.getElementById("size").value = "";
-        document.getElementById("qty").value = "";
 
-        loadItems(); // reload table
-    } catch (err) {
-        console.error(err);
+        loadItems();
+    } catch (error) {
+        console.log("Add error:", error);
     }
 });
 
 // DELETE ITEM
 async function deleteItem(id) {
-    if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-        await fetch(`${backendURL}/delete-item/${id}`, { method: "DELETE" });
+        await fetch(`${backendURL}/delete-item/${id}`, {
+            method: "DELETE"
+        });
+
         loadItems();
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.log("Delete error:", error);
     }
 }
 
 // EDIT ITEM
 async function editItem(id) {
-    let name = prompt("New Name");
-    let category = prompt("New Category");
-    let size = prompt("New Size");
-    let qty = prompt("New Quantity");
+    const name = prompt("Enter new name");
+    const category = prompt("Enter new category");
+    const size = prompt("Enter new size");
+    const qty = prompt("Enter new quantity");
 
     if (!name || !category || !size || !qty) return;
 
     try {
         await fetch(`${backendURL}/update-item/${id}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, category, size, qty: Number(qty) })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                category,
+                size,
+                qty
+            })
         });
+
         loadItems();
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.log("Update error:", error);
     }
 }
-
-// On load
-loadItems();
 
 // LOGOUT
 function logout() {
     window.location.href = "login.html";
 }
+
+// Load items when page opens
+loadItems();

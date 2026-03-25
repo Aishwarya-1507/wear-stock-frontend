@@ -13,6 +13,15 @@ async function register(event) {
         return;
     }
 
+    // STRONG PASSWORD CHECK
+    let strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+    if (!strongPassword.test(pass)) {
+        msg.style.color = "red";
+        msg.innerText = "Password must be 8+ chars, include uppercase, lowercase, number & special symbol";
+        return;
+    }
+
     try {
         let res = await fetch("https://wear-stock-backend.onrender.com/register", {
             method: "POST",
@@ -28,16 +37,15 @@ async function register(event) {
 
         let data = await res.json();
 
-        // SUCCESS
         if (data.message) {
-            msg.style.color = "dark green";
+            msg.style.color = "green";
             msg.innerText = data.message;
+
             setTimeout(() => {
                 window.location.href = "login.html";
             }, 1200);
         }
 
-        // ERROR
         if (data.error) {
             msg.style.color = "red";
             msg.innerText = data.error;
