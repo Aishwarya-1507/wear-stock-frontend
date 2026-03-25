@@ -23,7 +23,6 @@
 
 <h2 align="center">Manage Items</h2>
 
-<!-- ✅ INPUT FIELDS -->
 <div align="center">
     <input type="text" id="name" placeholder="Item Name">
     <input type="text" id="category" placeholder="Category">
@@ -32,23 +31,25 @@
     <button id="addBtn">Add Item</button>
 </div>
 
-<br><br>
+<br>
 
-<!-- ✅ TABLE -->
-<table border="1" width="80%" align="center" cellpadding="10">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Size</th>
-            <th>Qty</th>
-        </tr>
-    </thead>
-    <tbody id="tableBody">
-        <!-- Data will come from backend -->
-    </tbody>
-</table>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Size</th>
+                <th>Qty</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
 
 <footer>
     <aside>&copy; 2026 Wear Stock</aside>

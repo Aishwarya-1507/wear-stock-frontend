@@ -1,6 +1,6 @@
 const backendURL = "https://wear-stock-backend.onrender.com";
 
-// Load items as soon as the page opens
+// 1. Load items when page opens
 loadItems();
 
 async function loadItems() {
@@ -12,6 +12,18 @@ async function loadItems() {
         tableBody.innerHTML = "";
 
         items.forEach(item => {
+            // Logic to match your CSS classes
+            let status = "In Stock";
+            let statusClass = "in-stock";
+
+            if (item.qty === 0) {
+                status = "Out of Stock";
+                statusClass = "out-of-stock";
+            } else if (item.qty <= 5) {
+                status = "Low Stock";
+                statusClass = "low-stock";
+            }
+
             const row = `
                 <tr>
                     <td>${item.id}</td>
@@ -19,8 +31,9 @@ async function loadItems() {
                     <td>${item.category}</td>
                     <td>${item.size}</td>
                     <td>${item.qty}</td>
+                    <td class="${statusClass}">${status}</td>
                     <td>
-                        <button onclick="deleteItem(${item.id})" style="background:red; color:white; border:none; padding:5px; cursor:pointer;">Delete</button>
+                        <button onclick="deleteItem(${item.id})" style="background: rgba(255,0,0,0.6); padding: 5px 10px;">Delete</button>
                     </td>
                 </tr>
             `;
@@ -31,6 +44,7 @@ async function loadItems() {
     }
 }
 
+// 2. Add Item Logic
 document.getElementById("addBtn").addEventListener("click", async () => {
     const name = document.getElementById("name").value;
     const category = document.getElementById("category").value;
@@ -38,7 +52,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
     const qty = document.getElementById("qty").value;
 
     if (!name || !category || !size || !qty) {
-        alert("Please fill all fields");
+        alert("Please fill all fields!");
         return;
     }
 
@@ -51,23 +65,25 @@ document.getElementById("addBtn").addEventListener("click", async () => {
 
         const data = await res.json();
         if (data.message) {
-            alert("Item Added! ✅");
+            alert("Item Added ✅");
             // Clear inputs
-            document.getElementById("name").value = "";
-            document.getElementById("category").value = "";
-            document.getElementById("size").value = "";
-            document.getElementById("qty").value = "";
+            document.querySelectorAll("input").forEach(input => input.value = "");
             loadItems();
         }
     } catch (error) {
-        alert("Server error ❌");
+        console.error("Add error:", error);
     }
 });
 
+// 3. Delete Logic
 async function deleteItem(id) {
-    if (!confirm("Delete this item?")) return;
-    await fetch(`${backendURL}/delete-item/${id}`, { method: "DELETE" });
-    loadItems();
+    if (!confirm("Are you sure?")) return;
+    try {
+        await fetch(`${backendURL}/delete-item/${id}`, { method: "DELETE" });
+        loadItems();
+    } catch (error) {
+        console.error("Delete error:", error);
+    }
 }
 
 function logout() {
