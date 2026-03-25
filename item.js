@@ -58,7 +58,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
     }
 
     try {
-        await fetch(`${backendURL}/add-item`, {   // ✅ FIXED HERE
+       let res = await fetch(`${backendURL}/add-item`, {   // ✅ FIXED HERE
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -70,17 +70,23 @@ document.getElementById("addBtn").addEventListener("click", async () => {
                 qty
             })
         });
+        let data = await res.json();
+        console.log(data);
+        if (data.message){
 
-        // clear inputs
+// clear inputs
         document.getElementById("name").value = "";
         document.getElementById("category").value = "";
         document.getElementById("size").value = "";
         document.getElementById("qty").value = "";
 
         loadItems();
-
+        }else{
+            alert("Item not added");
+        }
     } catch (error) {
         console.log("Add error:", error);
+        alert("Server error");
     }
 });
 
