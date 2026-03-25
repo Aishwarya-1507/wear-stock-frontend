@@ -1,96 +1,45 @@
-// ==================== CONFIG ====================
-const backendURL = "https://wear-stock-backend.onrender.com"; // replace with your backend URL
-const tableBody = document.getElementById("tableBody");
+const backendURL = "https://wear-stock-backend.onrender.com"; 
 
-// ==================== LOAD ITEMS ====================
+// LOAD items from backend
 async function loadItems() {
     try {
         let res = await fetch(`${backendURL}/items`);
-        let items = await res.json();
+        let data = await res.json();
 
-        tableBody.innerHTML = ""; // clear table
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
 
-        // If there are no items in DB, show initial items
-        if (items.length === 0) {
-            tableBody.innerHTML = `
-                <tr>
-                    <td>101</td>
-                    <td>T-shirts</td>
-                    <td>Men</td>
-                    <td>M</td>
-                    <td>30</td>
-                    <td class="in-stock">In Stock</td>
-                    <td>
-                        <button onclick="editItem(this)">Edit</button>
-                        <button onclick="deleteItem(this)">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>102</td>
-                    <td>Jeans</td>
-                    <td>Women</td>
-                    <td>L</td>
-                    <td>15</td>
-                    <td class="low-stock">Low Stock</td>
-                    <td>
-                        <button onclick="editItem(this)">Edit</button>
-                        <button onclick="deleteItem(this)">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>103</td>
-                    <td>Jackets</td>
-                    <td>Kids</td>
-                    <td>S</td>
-                    <td>0</td>
-                    <td class="out-of-stock">Out of Stock</td>
-                    <td>
-                        <button onclick="editItem(this)">Edit</button>
-                        <button onclick="deleteItem(this)">Delete</button>
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        items.forEach(item => {
-            let status = "";
-            if (item.qty > 10) status = "In Stock";
-            else if (item.qty > 0) status = "Low Stock";
-            else status = "Out of Stock";
+        data.forEach((item, index) => {
+            let status = item.qty > 10 ? "In Stock" : (item.qty > 0 ? "Low Stock" : "Out of Stock");
 
             let row = document.createElement("tr");
-            row.dataset.id = item._id; // store MongoDB _id
             row.innerHTML = `
-                <td>${item._id}</td>
+                <td>${index + 1}</td>
                 <td>${item.name}</td>
                 <td>${item.category}</td>
                 <td>${item.size}</td>
                 <td>${item.qty}</td>
                 <td class="${status.toLowerCase().replace(" ", "-")}">${status}</td>
                 <td>
-                    <button onclick="editItem(this)">Edit</button>
-                    <button onclick="deleteItem(this)">Delete</button>
+                    <button onclick="editItem('${item._id}')">Edit</button>
+                    <button onclick="deleteItem('${item._id}')">Delete</button>
                 </td>
             `;
-            tableBody.appendChild(row);
+            tbody.appendChild(row);
         });
-
     } catch (err) {
-        console.error("Failed to load items:", err);
+        console.error(err);
     }
 }
 
-// ==================== ADD ITEM ====================
+// ADD ITEM
 document.getElementById("addBtn").addEventListener("click", async () => {
-    let inputs = document.querySelectorAll("input");
-    let id = inputs[0].value;
-    let name = inputs[1].value;
-    let category = inputs[2].value;
-    let size = inputs[3].value;
-    let qty = inputs[4].value;
+    const name = document.getElementById("name").value;
+    const category = document.getElementById("category").value;
+    const size = document.getElementById("size").value;
+    const qty = document.getElementById("qty").value;
 
-    if (!id || !name || !category || !size || !qty) {
+    if (!name || !category || !size || !qty) {
         alert("Please fill all fields");
         return;
     }
@@ -99,39 +48,37 @@ document.getElementById("addBtn").addEventListener("click", async () => {
         await fetch(`${backendURL}/add-item`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, name, category, size, qty: Number(qty) })
+            body: JSON.stringify({ name, category, size, qty: Number(qty) })
         });
+        // Clear fields
+        document.getElementById("name").value = "";
+        document.getElementById("category").value = "";
+        document.getElementById("size").value = "";
+        document.getElementById("qty").value = "";
 
-        inputs.forEach(input => input.value = "");
-        loadItems(); // refresh table
+        loadItems(); // reload table
     } catch (err) {
-        console.error("Add item failed:", err);
+        console.error(err);
     }
 });
 
-// ==================== DELETE ITEM ====================
-async function deleteItem(btn) {
-    let row = btn.parentElement.parentElement;
-    let id = row.dataset.id;
-
+// DELETE ITEM
+async function deleteItem(id) {
+    if (!confirm("Are you sure you want to delete this item?")) return;
     try {
         await fetch(`${backendURL}/delete-item/${id}`, { method: "DELETE" });
         loadItems();
     } catch (err) {
-        console.error("Delete failed:", err);
+        console.error(err);
     }
 }
 
-// ==================== EDIT ITEM ====================
-async function editItem(btn) {
-    let row = btn.parentElement.parentElement;
-    let id = row.dataset.id;
-    let cells = row.getElementsByTagName("td");
-    let idValue = cells[0].innerText; // ID is not editable, but we need it for the prompt
-    let name = prompt("Edit Name", cells[1].innerText);
-    let category = prompt("Edit Category", cells[2].innerText);
-    let size = prompt("Edit Size", cells[3].innerText);
-    let qty = prompt("Edit Quantity", cells[4].innerText);
+// EDIT ITEM
+async function editItem(id) {
+    let name = prompt("New Name");
+    let category = prompt("New Category");
+    let size = prompt("New Size");
+    let qty = prompt("New Quantity");
 
     if (!name || !category || !size || !qty) return;
 
@@ -141,12 +88,16 @@ async function editItem(btn) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, category, size, qty: Number(qty) })
         });
-
         loadItems();
     } catch (err) {
-        console.error("Update failed:", err);
+        console.error(err);
     }
 }
 
-// ==================== INITIAL LOAD ====================
+// On load
 loadItems();
+
+// LOGOUT
+function logout() {
+    window.location.href = "login.html";
+}
