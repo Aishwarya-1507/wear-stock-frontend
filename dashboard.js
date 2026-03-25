@@ -34,8 +34,14 @@ async function loadDashboard() {
 
         items.forEach(item => {
             let status = "In Stock";
-            if (item.qty === 0) status = "Out of Stock";
-            else if (item.qty <= 5) status = "Low Stock";
+            let statusclass = "in-stock";
+            if (item.qty === 0){ status = "Out of Stock";
+            statusclass = "out-of-stock";
+            }
+            else if (item.qty <= 5) {status = "Low Stock";
+            statusclass = "low-stock";
+            }
+
 
             table.innerHTML += `
                 <tr>

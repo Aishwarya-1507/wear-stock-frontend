@@ -28,7 +28,7 @@ async function login(event) {
 
         // SUCCESS
         if (data.success) {
-            msg.style.color = "green";
+            msg.style.color = "dark green";
             msg.innerText = "Login Successful!";
 
             setTimeout(() => {

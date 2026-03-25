@@ -51,7 +51,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
     }
 
     try {
-        await fetch(`${backendURL}/add-item`, {
+        await fetch(`${backendURL}/add-items`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

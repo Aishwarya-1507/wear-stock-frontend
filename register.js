@@ -38,7 +38,7 @@ async function register(event) {
         let data = await res.json();
 
         if (data.message) {
-            msg.style.color = "green";
+            msg.style.color = "dark green";
             msg.innerText = data.message;
 
             setTimeout(() => {
