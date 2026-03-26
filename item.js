@@ -1,8 +1,6 @@
 const backendURL = "https://wear-stock-backend.onrender.com";
 
-// 1. Load items when page opens
-loadItems();
-
+// 1. LOAD ITEMS
 async function loadItems() {
     try {
         const res = await fetch(`${backendURL}/items`);
@@ -12,16 +10,16 @@ async function loadItems() {
         tableBody.innerHTML = "";
 
         items.forEach(item => {
-            // Logic to match your CSS classes
+            // Determine Status and Color
             let status = "In Stock";
-            let statusClass = "in-stock";
+            let statusColor = "#2ecc71"; // Green
 
             if (item.qty === 0) {
                 status = "Out of Stock";
-                statusClass = "out-of-stock";
+                statusColor = "#e74c3c"; // Red
             } else if (item.qty <= 5) {
                 status = "Low Stock";
-                statusClass = "low-stock";
+                statusColor = "#e67e22"; // Orange
             }
 
             const row = `
@@ -31,9 +29,10 @@ async function loadItems() {
                     <td>${item.category}</td>
                     <td>${item.size}</td>
                     <td>${item.qty}</td>
-                    <td class="${statusClass}">${status}</td>
+                    <td style="color: ${statusColor}; font-weight: bold;">${status}</td>
                     <td>
-                        <button onclick="deleteItem(${item.id})" style="background: rgba(255,0,0,0.6); padding: 5px 10px;">Delete</button>
+                        <button class="edit-btn" onclick="editItem(${item.id})">Edit</button>
+                        <button class="delete-btn" onclick="deleteItem(${item.id})">Delete</button>
                     </td>
                 </tr>
             `;
@@ -44,40 +43,41 @@ async function loadItems() {
     }
 }
 
-// 2. Add Item Logic
-document.getElementById("addBtn").addEventListener("click", async () => {
-    const name = document.getElementById("name").value;
-    const category = document.getElementById("category").value;
-    const size = document.getElementById("size").value;
-    const qty = document.getElementById("qty").value;
+// 2. EDIT ITEM FUNCTION
+async function editItem(id) {
+    const name = prompt("Enter new name:");
+    const category = prompt("Enter new category:");
+    const size = prompt("Enter new size:");
+    const qty = prompt("Enter new quantity:");
 
-    if (!name || !category || !size || !qty) {
-        alert("Please fill all fields!");
-        return;
-    }
+    // If user cancels any prompt, stop the update
+    if (!name || !category || !size || !qty) return;
 
     try {
-        const res = await fetch(`${backendURL}/add-item`, {
-            method: "POST",
+        const res = await fetch(`${backendURL}/update-item/${id}`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, category, size, qty: Number(qty) })
+            body: JSON.stringify({
+                name,
+                category,
+                size,
+                qty: Number(qty)
+            })
         });
-
-        const data = await res.json();
-        if (data.message) {
-            alert("Item Added ✅");
-            // Clear inputs
-            document.querySelectorAll("input").forEach(input => input.value = "");
+        
+        if (res.ok) {
+            alert("Item Updated ✅");
             loadItems();
         }
     } catch (error) {
-        console.error("Add error:", error);
+        console.error("Update error:", error);
     }
-});
+}
 
-// 3. Delete Logic
+// 3. DELETE ITEM FUNCTION
 async function deleteItem(id) {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Are you sure you want to delete this item?")) return;
+    
     try {
         await fetch(`${backendURL}/delete-item/${id}`, { method: "DELETE" });
         loadItems();
@@ -86,6 +86,5 @@ async function deleteItem(id) {
     }
 }
 
-function logout() {
-    window.location.href = "login.html";
-}
+// Initial load
+loadItems();
