@@ -87,6 +87,47 @@ async function deleteItem(id) {
     }
 }
 
+// 4. Edit Item Logic
+async function editItem(id) {
+    // 1. Ask the user for new details using prompts
+    const newName = prompt("Enter new Item Name:");
+    const newCategory = prompt("Enter new Category:");
+    const newSize = prompt("Enter new Size:");
+    const newQty = prompt("Enter new Quantity:");
+
+    // 2. If the user hits 'Cancel' or leaves fields empty, stop here
+    if (!newName || !newCategory || !newSize || !newQty) {
+        alert("Edit cancelled or missing info.");
+        return;
+    }
+
+    try {
+        // 3. Send the updated data to the server
+        const res = await fetch(`${backendURL}/update-item/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                name: newName, 
+                category: newCategory, 
+                size: newSize, 
+                qty: Number(newQty) 
+            })
+        });
+
+        const data = await res.json();
+        
+        if (res.ok) {
+            alert("Item Updated ✅");
+            loadItems(); // Refresh the table to show changes
+        } else {
+            alert("Update failed ❌");
+        }
+    } catch (error) {
+        console.error("Edit error:", error);
+        alert("Server error during update.");
+    }
+}
+
 function logout() {
     window.location.href = "login.html";
 }

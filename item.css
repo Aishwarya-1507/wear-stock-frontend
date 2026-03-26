@@ -85,7 +85,7 @@ button {
 /* Button hover */
 button:hover {
     transform: scale(1.05);
-    background: linear-gradient(to right, #6a11cb, #4b6cb7);
+    background: linear-gradient(to right, #6a11cb, #3368e4);
 }
 
 /* Table container */
