@@ -88,6 +88,7 @@ async function deleteItem(id) {
 }
 
 // 4. Edit Item Logic
+// This matches the onclick="editItem(${item.id})" in your table
 async function editItem(id) {
     // 1. Ask the user for new details using prompts
     const newName = prompt("Enter new Item Name:");
@@ -95,7 +96,7 @@ async function editItem(id) {
     const newSize = prompt("Enter new Size:");
     const newQty = prompt("Enter new Quantity:");
 
-    // 2. If the user hits 'Cancel' or leaves fields empty, stop here
+    // 2. Stop if user cancels or leaves fields empty
     if (!newName || !newCategory || !newSize || !newQty) {
         alert("Edit cancelled or missing info.");
         return;
@@ -114,8 +115,6 @@ async function editItem(id) {
             })
         });
 
-        const data = await res.json();
-        
         if (res.ok) {
             alert("Item Updated ✅");
             loadItems(); // Refresh the table to show changes
