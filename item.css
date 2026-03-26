@@ -60,14 +60,14 @@ input {
     border-radius: 6px;
     border: none;
     outline: none;
-    background: rgba(255,255,255,0.15);
+    background: rgba(15, 0, 0, 0);
     color: white;
 }
 
 /* Input focus */
 input:focus {
     border: 1px solid #6a11cb;
-    background: rgba(255,255,255,0.2);
+    background: rgba(14, 1, 1, 0.544);
 }
 
 /* Button */
