@@ -1,26 +1,27 @@
-// Change this to your actual Render backend URL
 const backendURL = "https://wear-stock-backend.onrender.com";
 
-// 1. Function to Load and Display Items
+// 1. Load items when page opens
+loadItems();
+
 async function loadItems() {
     try {
         const res = await fetch(`${backendURL}/items`);
         const items = await res.json();
 
         const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = ""; // Clear table before adding new rows
+        tableBody.innerHTML = "";
 
         items.forEach(item => {
-            // Logic for Stock Status and Color
+            // Logic to match your CSS classes
             let status = "In Stock";
-            let statusColor = "#2ecc71"; // Green
+            let statusClass = "in-stock";
 
             if (item.qty === 0) {
                 status = "Out of Stock";
-                statusColor = "#e74c3c"; // Red
+                statusClass = "out-of-stock";
             } else if (item.qty <= 5) {
                 status = "Low Stock";
-                statusColor = "#f1c40f"; // Yellow/Orange
+                statusClass = "low-stock";
             }
 
             const row = `
@@ -30,7 +31,7 @@ async function loadItems() {
                     <td>${item.category}</td>
                     <td>${item.size}</td>
                     <td>${item.qty}</td>
-                    <td style="color: ${statusColor}; font-weight: bold;">${status}</td>
+                    <td class="${statusClass}">${status}</td>
                     <td>
                         <button class="edit-btn" onclick="editItem(${item.id})">Edit</button>
                         <button class="delete-btn" onclick="deleteItem(${item.id})">Delete</button>
@@ -45,7 +46,6 @@ async function loadItems() {
 }
 
 // 2. Add Item Logic
-// We use 'async' to wait for the server to finish adding before we reload the table
 document.getElementById("addBtn").addEventListener("click", async () => {
     const name = document.getElementById("name").value;
     const category = document.getElementById("category").value;
@@ -57,77 +57,36 @@ document.getElementById("addBtn").addEventListener("click", async () => {
         return;
     }
 
-    const newItem = {
-        name: name,
-        category: category,
-        size: size,
-        qty: Number(qty)
-    };
-
     try {
         const res = await fetch(`${backendURL}/add-item`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newItem)
+            body: JSON.stringify({ name, category, size, qty: Number(qty) })
         });
 
         const data = await res.json();
-
-        if (res.ok) {
-            alert("Item Added Successfully! ✅");
-            
-            // Clear the input boxes
-            document.getElementById("name").value = "";
-            document.getElementById("category").value = "";
-            document.getElementById("size").value = "";
-            document.getElementById("qty").value = "";
-
-            // REFRESH THE TABLE IMMEDIATELY
-            loadItems(); 
-        } else {
-            alert("Error: " + data.error);
+        if (data.message) {
+            alert("Item Added ✅");
+            // Clear inputs
+            document.querySelectorAll("input").forEach(input => input.value = "");
+            loadItems();
         }
-    } catch (err) {
-        console.error("Fetch error:", err);
-        alert("Server connection failed. Check your backend URL.");
+    } catch (error) {
+        console.error("Add error:", error);
     }
 });
 
-// 3. Delete Item Logic
+// 3. Delete Logic
 async function deleteItem(id) {
-    if (!confirm("Are you sure you want to delete this item?")) return;
-
+    if (!confirm("Are you sure?")) return;
     try {
-        const res = await fetch(`${backendURL}/delete-item/${id}`, {
-            method: "DELETE"
-        });
-
-        if (res.ok) {
-            loadItems(); // Refresh table after delete
-        }
-    } catch (err) {
-        console.error("Delete error:", err);
+        await fetch(`${backendURL}/delete-item/${id}`, { method: "DELETE" });
+        loadItems();
+    } catch (error) {
+        console.error("Delete error:", error);
     }
 }
 
-// 4. Edit Item Logic (Using prompt for simplicity)
-async function editItem(id) {
-    const newName = prompt("Enter new Name:");
-    const newQty = prompt("Enter new Quantity:");
-
-    if (!newName || !newQty) return;
-
-    try {
-        await fetch(`${backendURL}/update-item/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: newName, qty: Number(newQty) })
-        });
-        loadItems(); // Refresh table after update
-    } catch (err) {
-        console.error("Update error:", err);
-    }
+function logout() {
+    window.location.href = "login.html";
 }
-
-// 5. Run this when the page first opens
-loadItems();
