@@ -40,7 +40,7 @@ function renderCharts(catData, stockData) {
         type: 'bar',
         data: {
             labels: Object.keys(catData),
-            datasets: [{ label: 'Items', data: Object.values(catData), backgroundColor: '#3498db' }]
+            datasets: [{ label: 'Items', data: Object.values(catData), backgroundColor: '#3498db', fontColor: '#ffffff' }]
         }
     });
 
