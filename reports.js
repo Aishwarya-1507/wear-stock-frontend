@@ -5,12 +5,11 @@ async function loadReports() {
         const res = await fetch(`${backendURL}/items`);
         const items = await res.json();
 
-        // 1. Update Cards
         const total = items.length;
         const low = items.filter(i => i.qty > 0 && i.qty <= 5).length;
         const out = items.filter(i => i.qty === 0).length;
         
-        const catMap = {}; // To count items per category
+        const catMap = {}; 
         items.forEach(i => catMap[i.category] = (catMap[i.category] || 0) + 1);
         const catCount = Object.keys(catMap).length;
 
@@ -19,14 +18,12 @@ async function loadReports() {
         document.getElementById("outStock").innerText = out;
         document.getElementById("categories").innerText = catCount;
 
-        // 2. Category Summary Table
         const catTable = document.getElementById("categoryTable");
         catTable.innerHTML = "";
         for (let cat in catMap) {
             catTable.innerHTML += `<tr><td>${cat}</td><td>${catMap[cat]}</td></tr>`;
         }
 
-        // 3. Charts
         renderCharts(catMap, { inStock: total - low - out, low, out });
 
     } catch (error) {
@@ -35,16 +32,27 @@ async function loadReports() {
 }
 
 function renderCharts(catData, stockData) {
-    // Bar Chart: Category Distribution
+    const chartOptions = {
+        plugins: {
+            legend: { labels: { color: '#ffffff', font: { size: 14, weight: 'bold' } } }
+        },
+        scales: {
+            x: { ticks: { color: '#ffffff', font: { weight: 'bold' } }, grid: { display: false } },
+            y: { ticks: { color: '#ffffff', font: { weight: 'bold' } }, grid: { color: 'rgba(255,255,255,0.1)' } }
+        }
+    };
+
+    // Bar Chart
     new Chart(document.getElementById("barChart"), {
         type: 'bar',
         data: {
             labels: Object.keys(catData),
-            datasets: [{ label: 'Items', data: Object.values(catData), backgroundColor: '#3498db', fontColor: '#ffffff' }]
-        }
+            datasets: [{ label: 'Items', data: Object.values(catData), backgroundColor: '#3498db' }]
+        },
+        options: chartOptions // Applying the dark mode labels here
     });
 
-    // Pie Chart: Stock Status
+    // Pie Chart
     new Chart(document.getElementById("pieChart"), {
         type: 'pie',
         data: {
@@ -53,6 +61,11 @@ function renderCharts(catData, stockData) {
                 data: [stockData.inStock, stockData.low, stockData.out],
                 backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c']
             }]
+        },
+        options: {
+            plugins: {
+                legend: { labels: { color: '#ffffff', font: { size: 14, weight: 'bold' } } }
+            }
         }
     });
 }
